@@ -964,6 +964,7 @@
   const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1490627248418586674/jVb9a_XX5AgD4UZ-SC-K50tsKhQnzebG4XKt2LDwkfGY2zE8D6OivPB504ILl2gMJOpQ'
 
   // Local counter key
+  const BASE_COUNT = 232 + Math.floor(Math.random() * 20)
   const COUNTER_KEY = 'sol_waitlist_count'
 
   // ─────────────────────────────────────────────
@@ -971,7 +972,12 @@
   // In production replace with a real DB counter
   // ─────────────────────────────────────────────
   function getCount() {
-    return parseInt(localStorage.getItem(COUNTER_KEY) || '0')
+    const stored = localStorage.getItem(COUNTER_KEY)
+
+    // If no one has signed up yet → start from BASE_COUNT
+    if (!stored) return BASE_COUNT
+
+    return parseInt(stored)
   }
 
   function incrementCount() {
