@@ -529,6 +529,62 @@
       line-height: 1.65;
     }
 
+    /* ── EARLY SUPPORTERS ── */
+    .early-supporters {
+        padding: 80px 24px;
+    }
+
+    .early-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .early-text h2 {
+        font-family: 'Fraunces', serif;
+        font-size: 34px;
+        font-weight: 300;
+        margin-bottom: 12px;
+    }
+
+    .early-text p {
+        font-size: 16px;
+        color: var(--muted);
+        line-height: 1.7;
+    }
+
+    .early-card {
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(201,107,46,0.18);
+        transform: rotate(-2deg);
+        transition: transform 0.3s ease;
+    }
+
+    .early-card:hover {
+        transform: rotate(0deg) scale(1.02);
+    }
+
+    .early-card img {
+        width: 100%;
+        display: block;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .early-inner {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .early-card {
+            transform: none;
+        }
+    }
+
     /* ── COUNTER ── */
     .counter-wrap {
       text-align: center;
@@ -915,6 +971,25 @@
 
     </div>
   </section>
+
+    <!-- EARLY SUPPORTERS -->
+    <section class="early-supporters">
+    <div class="early-inner">
+
+        <div class="early-text">
+        <h2>For Sol Early Supporters</h2>
+        <p>
+            The first 100 members get lifetime early access, priority features,
+            and a direct line into how Sol evolves.
+        </p>
+        </div>
+
+        <div class="early-card">
+        <img src="sol-member.png" alt="Sol Early Access Card" />
+        </div>
+
+    </div>
+    </section>
 
   <!-- FEATURES -->
   <section class="features" id="features">
