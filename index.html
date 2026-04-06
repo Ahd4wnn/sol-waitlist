@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sol — Coming Soon</title>
   <meta name="description" content="An AI therapist that actually gets you. Built for college students. Join the waitlist." />
+  <meta name="theme-color" content="#F9F7F4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Sol" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta property="og:title" content="Sol — AI Therapy for College Students" />
+  <meta property="og:description" content="An AI therapist that actually gets you. Join the waitlist." />
+  <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -602,12 +610,201 @@
     .error-msg.show { display: block; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 640px) {
-      nav { padding: 18px 20px; }
-      .hero { padding: 60px 20px 40px; }
-      .form-card { padding: 28px 20px; }
-      footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
-      .features { padding: 40px 20px 60px; }
+
+    /* Tablet */
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+
+      .hero {
+        padding: 56px 20px 48px;
+        justify-content: flex-start;
+        padding-top: 52px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 11vw, 56px);
+        line-height: 1.08;
+      }
+
+      .subtext {
+        font-size: 16px;
+        margin-bottom: 36px;
+        max-width: 100%;
+      }
+
+      .form-card {
+        padding: 28px 22px;
+        border-radius: 22px;
+      }
+
+      .features {
+        padding: 48px 20px 64px;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      footer {
+        padding: 24px 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .footer-tagline { display: none; }
+
+      .trust-row { gap: 14px; }
+      .trust-item { font-size: 12px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      nav {
+        padding: 14px 18px;
+      }
+
+      .nav-badge {
+        font-size: 11px;
+        padding: 5px 11px;
+        gap: 5px;
+      }
+
+      .sol-name { font-size: 20px; }
+      .sol-dot { width: 26px; height: 26px; font-size: 12px; }
+
+      .hero {
+        padding: 44px 16px 40px;
+      }
+
+      .chip {
+        font-size: 10px;
+        padding: 6px 13px;
+        margin-bottom: 20px;
+        letter-spacing: 0.03em;
+      }
+
+      h1 {
+        font-size: clamp(34px, 12vw, 48px);
+        margin-bottom: 16px;
+        letter-spacing: -0.02em;
+      }
+
+      .subtext {
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 28px;
+      }
+
+      .form-card {
+        padding: 24px 18px;
+        border-radius: 20px;
+        /* Remove glass blur on low-end phones for perf */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .form-label { font-size: 11px; }
+
+      input[type="email"] {
+        font-size: 16px; /* prevents iOS zoom on focus */
+        padding: 13px 14px 13px 42px;
+        border-radius: 12px;
+      }
+
+      textarea {
+        font-size: 16px; /* prevents iOS zoom */
+        padding: 12px 14px;
+        border-radius: 12px;
+        min-height: 80px;
+        margin-bottom: 16px;
+      }
+
+      .btn {
+        padding: 14px;
+        font-size: 15px;
+        border-radius: 999px;
+      }
+
+      .counter-wrap { padding: 16px 20px 0; }
+      .counter-number { font-size: 34px; }
+      .counter-label { font-size: 12px; }
+
+      .trust-row {
+        gap: 10px;
+        margin-top: 24px;
+        justify-content: center;
+      }
+
+      .trust-item {
+        font-size: 11px;
+        gap: 4px;
+      }
+
+      /* Stack features to single column on small phones */
+      .features {
+        grid-template-columns: 1fr;
+        padding: 36px 16px 52px;
+        gap: 10px;
+      }
+
+      .feat {
+        padding: 22px 18px;
+        border-radius: 16px;
+      }
+
+      .feat h3 { font-size: 16px; }
+      .feat p { font-size: 13px; }
+      .feat-icon {
+        width: 36px; height: 36px;
+        font-size: 16px;
+        border-radius: 9px;
+        margin-bottom: 12px;
+      }
+
+      footer {
+        padding: 20px 18px;
+        gap: 6px;
+      }
+
+      .footer-right { font-size: 11px; }
+
+      /* Success state on mobile */
+      .success-icon { width: 52px; height: 52px; font-size: 22px; }
+      .success-title { font-size: 20px; }
+      .success-body { font-size: 13px; }
+      .success-number { font-size: 12px; padding: 6px 16px; }
+    }
+
+    /* Very small phones (SE, Galaxy A series) */
+    @media (max-width: 360px) {
+      h1 { font-size: 30px; }
+      .subtext { font-size: 14px; }
+      .form-card { padding: 20px 14px; }
+      .trust-row { flex-direction: column; align-items: center; gap: 8px; }
+    }
+
+    /* Prevent horizontal scroll on all sizes */
+    html, body { max-width: 100%; overflow-x: hidden; }
+
+    /* iOS safe area padding for notch/home bar */
+    @supports (padding: max(0px)) {
+      nav {
+        padding-top: max(14px, env(safe-area-inset-top));
+        padding-left: max(18px, env(safe-area-inset-left));
+        padding-right: max(18px, env(safe-area-inset-right));
+      }
+      footer {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(18px, env(safe-area-inset-left));
+        padding-right: max(18px, env(safe-area-inset-right));
+      }
+    }
+
+    /* Reduce motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
