@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sol — Coming Soon</title>
+  <meta name="description" content="An AI therapist that actually gets you. Built for college students. Join the waitlist." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F9F7F4;
+      --surface:   rgba(255, 252, 248, 0.72);
+      --amber:     #C96B2E;
+      --amber-lt:  #E8874A;
+      --amber-dim: rgba(201, 107, 46, 0.12);
+      --text:      #1A1714;
+      --muted:     #6B6560;
+      --faint:     #9E8E7E;
+      --border:    rgba(232, 227, 221, 0.8);
+      --green:     #3D7A5F;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── MESH BACKGROUND ── */
+    .mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 12% 38%, rgba(201,107,46,0.18) 0%, transparent 52%),
+        radial-gradient(ellipse at 88% 14%, rgba(253,220,190,0.22) 0%, transparent 48%),
+        radial-gradient(ellipse at 62% 88%, rgba(245,230,216,0.28) 0%, transparent 52%),
+        radial-gradient(ellipse at 38% 62%, rgba(255,200,150,0.10) 0%, transparent 44%),
+        var(--bg);
+      pointer-events: none;
+    }
+
+    /* Grain overlay */
+    .mesh::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(249, 247, 244, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+
+    .sol-dot {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--amber);
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      box-shadow: 0 2px 12px rgba(201,107,46,0.35);
+      flex-shrink: 0;
+    }
+
+    .sol-name {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 22px;
+      color: var(--text);
+    }
+
+    .nav-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--amber-dim);
+      border: 1px solid rgba(201,107,46,0.22);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-badge span.dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      animation: livePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Floating orb behind hero */
+    .hero-orb {
+      position: absolute;
+      top: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(201,107,46,0.09) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      animation: orbFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0px); }
+      50% { transform: translateX(-50%) translateY(-20px); }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Pre-headline chip */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: var(--amber-dim);
+      border: 1px solid rgba(201,107,46,0.25);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    /* ── HEADLINE ── */
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-size: clamp(44px, 8vw, 76px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 22px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    .subtext {
+      font-size: clamp(16px, 2.5vw, 19px);
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto 48px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 28px;
+      padding: 36px 32px;
+      box-shadow:
+        0 20px 60px rgba(201,107,46,0.12),
+        0 4px 16px rgba(0,0,0,0.06);
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--faint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .form-label .optional {
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 11px;
+      color: #C8C3BD;
+      margin-left: 4px;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-wrap .icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--faint);
+      font-size: 16px;
+      pointer-events: none;
+      transition: color 150ms;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: rgba(249,247,244,0.6);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 150ms, box-shadow 150ms;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(201,107,46,0.12);
+    }
+
+    input[type="email"]:focus ~ .icon,
+    .input-wrap:focus-within .icon {
+      color: var(--amber);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: rgba(249,247,244,0.6);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      resize: none;
+      min-height: 90px;
+      line-height: 1.6;
+      transition: border-color 150ms, box-shadow 150ms;
+      margin-bottom: 20px;
+    }
+
+    textarea::placeholder, input::placeholder {
+      color: #C8C3BD;
+    }
+
+    textarea:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(201,107,46,0.12);
+    }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 999px;
+      border: none;
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(255,160,80,0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(180,70,20,0.3) 0%, transparent 50%),
+        var(--amber);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      position: relative;
+      overflow: hidden;
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+      box-shadow: 0 4px 20px rgba(201,107,46,0.4), 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.22) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(201,107,46,0.5), 0 2px 8px rgba(0,0,0,0.12);
+      filter: brightness(1.05);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn .btn-text { transition: opacity 150ms; }
+    .btn .btn-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 150ms;
+    }
+
+    .btn.loading .btn-text { opacity: 0; }
+    .btn.loading .btn-loader { opacity: 1; }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── SUCCESS STATE ── */
+    .success-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 8px 0;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .success-state.show { display: flex; }
+    .form-fields.hide { display: none; }
+
+    .success-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(61,122,95,0.1);
+      border: 2px solid rgba(61,122,95,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      margin-bottom: 18px;
+      animation: popIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .success-title {
+      font-family: 'Fraunces', serif;
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .success-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .success-number {
+      margin-top: 16px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: var(--amber-dim);
+      border: 1px solid rgba(201,107,46,0.2);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--amber);
+    }
+
+    /* ── TRUST ROW ── */
+    .trust-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+      animation: fadeUp 0.6s 0.45s ease both;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--faint);
+    }
+
+    .trust-item span.mark { color: var(--amber); }
+
+    /* ── FEATURES ── */
+    .features {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .feat {
+      padding: 26px 22px;
+      border-radius: 20px;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(201,107,46,0.05);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 200ms;
+    }
+
+    .feat:hover {
+      box-shadow: 0 8px 30px rgba(201,107,46,0.12);
+      transform: translateY(-2px);
+    }
+
+    .feat.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .feat-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--amber-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .feat h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+
+    .feat p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── COUNTER ── */
+    .counter-wrap {
+      text-align: center;
+      padding: 20px 24px 0;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    .counter-number {
+      font-family: 'Fraunces', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--amber);
+      line-height: 1;
+      display: inline-block;
+    }
+
+    .counter-label {
+      font-size: 13px;
+      color: var(--faint);
+      margin-top: 4px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-sol {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: #C8C3BD;
+      margin-left: 8px;
+    }
+
+    .footer-right {
+      font-size: 12px;
+      color: #C8C3BD;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── ERROR ── */
+    .error-msg {
+      display: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(192,57,43,0.08);
+      border: 1px solid rgba(192,57,43,0.2);
+      font-size: 13px;
+      color: #C0392B;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .error-msg.show { display: block; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 18px 20px; }
+      .hero { padding: 60px 20px 40px; }
+      .form-card { padding: 28px 20px; }
+      footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+      .features { padding: 40px 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mesh"></div>
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <a class="wordmark" href="#">
+      <div class="sol-dot">S</div>
+      <span class="sol-name">Sol</span>
+    </a>
+    <div class="nav-badge">
+      <span class="dot"></span>
+      Waitlist open
+    </div>
+  </nav>
+
+  <!-- HERO ORB -->
+  <div class="hero-orb"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <div class="chip">
+        <span>✦</span>
+        Coming soon · Built for college students
+      </div>
+
+      <h1>
+        Therapy that<br>
+        <em>actually gets</em><br>
+        you.
+      </h1>
+
+      <p class="subtext">
+        Sol is an AI therapist that remembers everything,
+        adapts to you completely, and shows up at 3am when
+        you need it most. Like a brilliant friend who actually listens.
+      </p>
+
+      <!-- FORM CARD -->
+      <div class="form-card">
+
+        <!-- Form fields -->
+        <div class="form-fields" id="formFields">
+
+          <div class="error-msg" id="errorMsg"></div>
+
+          <label class="form-label" for="emailInput">Your email</label>
+          <div class="input-wrap">
+            <input
+              type="email"
+              id="emailInput"
+              placeholder="you@college.edu"
+              autocomplete="email"
+              required
+            />
+            <span class="icon">✉</span>
+          </div>
+
+          <label class="form-label" for="expectInput">
+            What are you hoping Sol helps with?
+            <span class="optional">optional</span>
+          </label>
+          <textarea
+            id="expectInput"
+            placeholder="e.g. anxiety before exams, feeling lonely, talking through family stuff..."
+          ></textarea>
+
+          <button class="btn" id="submitBtn" onclick="handleSubmit()">
+            <span class="btn-text">Join the waitlist →</span>
+            <span class="btn-loader"><span class="spinner"></span></span>
+          </button>
+
+        </div>
+
+        <!-- Success state -->
+        <div class="success-state" id="successState">
+          <div class="success-icon">☀️</div>
+          <div class="success-title">You're on the list.</div>
+          <div class="success-body">
+            Sol will reach out personally when you're up.<br>
+            You won't wait long.
+          </div>
+          <div class="success-number" id="successPosition"></div>
+        </div>
+
+      </div>
+
+      <!-- Counter -->
+      <div class="counter-wrap">
+        <div class="counter-number" id="counter">—</div>
+        <div class="counter-label">people already waiting</div>
+      </div>
+
+      <!-- Trust row -->
+      <div class="trust-row">
+        <div class="trust-item"><span class="mark">✦</span> No judgment</div>
+        <div class="trust-item"><span class="mark">✦</span> Available 24/7</div>
+        <div class="trust-item"><span class="mark">✦</span> Remembers everything</div>
+        <div class="trust-item"><span class="mark">✦</span> Free to start</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+
+    <div class="feat">
+      <div class="feat-icon">◈</div>
+      <h3>Sol remembers</h3>
+      <p>Every session builds on the last. Sol tracks the people in your life, your patterns, and your growth — so you never start over.</p>
+    </div>
+
+    <div class="feat">
+      <div class="feat-icon">◎</div>
+      <h3>Shaped around you</h3>
+      <p>An 11-question psychological intake means Sol understands your attachment style, coping patterns, and what support actually helps you.</p>
+    </div>
+
+    <div class="feat">
+      <div class="feat-icon">☽</div>
+      <h3>Always there</h3>
+      <p>3am spiral? Pre-exam anxiety? Sol has no office hours and no waitlist. It's there whenever you need it.</p>
+    </div>
+
+    <div class="feat">
+      <div class="feat-icon">♡</div>
+      <h3>Free to start</h3>
+      <p>20 messages to try Sol, no credit card needed. Upgrade for unlimited sessions when you're ready.</p>
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <div class="sol-dot" style="width:22px;height:22px;font-size:10px;">S</div>
+      <span class="footer-sol">Sol</span>
+      <span class="footer-tagline">· Your mind deserves a friend.</span>
+    </div>
+    <div class="footer-right">© 2025 Sol · All rights reserved</div>
+  </footer>
+
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIGURATION — replace with your values
+  // ─────────────────────────────────────────────
+  const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE'
+
+  // Local counter key
+  const COUNTER_KEY = 'sol_waitlist_count'
+
+  // ─────────────────────────────────────────────
+  // COUNTER — stored in localStorage
+  // In production replace with a real DB counter
+  // ─────────────────────────────────────────────
+  function getCount() {
+    return parseInt(localStorage.getItem(COUNTER_KEY) || '0')
+  }
+
+  function incrementCount() {
+    const current = getCount()
+    const next = current + 1
+    localStorage.setItem(COUNTER_KEY, next)
+    return next
+  }
+
+  function animateCounter(target) {
+    const el = document.getElementById('counter')
+    if (!target || target === 0) {
+      el.textContent = '—'
+      return
+    }
+    let current = Math.max(0, target - 12)
+    const step = () => {
+      current = Math.min(current + 1, target)
+      el.textContent = current.toLocaleString()
+      if (current < target) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }
+
+  // Init counter on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const count = getCount()
+    if (count > 0) animateCounter(count)
+  })
+
+  // ─────────────────────────────────────────────
+  // FORM SUBMIT
+  // ─────────────────────────────────────────────
+  async function handleSubmit() {
+    const emailEl = document.getElementById('emailInput')
+    const expectEl = document.getElementById('expectInput')
+    const btn = document.getElementById('submitBtn')
+    const errorEl = document.getElementById('errorMsg')
+
+    const email = emailEl.value.trim()
+    const expectation = expectEl.value.trim()
+
+    // Validate email
+    errorEl.classList.remove('show')
+    if (!email) {
+      showError('Please enter your email address.')
+      emailEl.focus()
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('Please enter a valid email address.')
+      emailEl.focus()
+      return
+    }
+
+    // Loading state
+    btn.classList.add('loading')
+    btn.disabled = true
+
+    try {
+      // Build Discord message
+      const timestamp = new Date().toLocaleString('en-US', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      })
+
+      const discordPayload = {
+        username: 'Sol Waitlist',
+        avatar_url: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/2600.png',
+        embeds: [{
+          title: '☀️ New Waitlist Signup',
+          color: 0xC96B2E,
+          fields: [
+            {
+              name: '📧 Email',
+              value: email,
+              inline: true,
+            },
+            {
+              name: '🕐 Time',
+              value: timestamp,
+              inline: true,
+            },
+            ...(expectation ? [{
+              name: '💭 What they\'re hoping for',
+              value: expectation,
+              inline: false,
+            }] : [{
+              name: '💭 Expectation',
+              value: '_Not provided_',
+              inline: false,
+            }]),
+          ],
+          footer: {
+            text: 'Sol · AI Therapy for College Students',
+          },
+          thumbnail: {
+            url: 'https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/2600.png',
+          },
+        }],
+      }
+
+      // Send to Discord
+      const res = await fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(discordPayload),
+      })
+
+      if (!res.ok && res.status !== 204) {
+        throw new Error(`Discord responded with ${res.status}`)
+      }
+
+      // Success
+      const newCount = incrementCount()
+      animateCounter(newCount)
+      showSuccess(newCount)
+
+    } catch (err) {
+      console.error('Waitlist submission failed:', err)
+
+      // If webhook fails, still show success to user
+      // (don't punish them for backend issues)
+      // But log it clearly
+      if (DISCORD_WEBHOOK_URL === 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
+        showError('⚠️ Webhook URL not configured. Replace YOUR_DISCORD_WEBHOOK_URL_HERE in the script.')
+        btn.classList.remove('loading')
+        btn.disabled = false
+        return
+      }
+
+      // For other errors, show success anyway & log
+      const newCount = incrementCount()
+      animateCounter(newCount)
+      showSuccess(newCount)
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg')
+    el.textContent = msg
+    el.classList.add('show')
+    document.getElementById('submitBtn').classList.remove('loading')
+    document.getElementById('submitBtn').disabled = false
+  }
+
+  function showSuccess(count) {
+    document.getElementById('formFields').classList.add('hide')
+    const successEl = document.getElementById('successState')
+    successEl.classList.add('show')
+    document.getElementById('successPosition').textContent =
+      `You're #${count} on the list`
+  }
+
+  // ─────────────────────────────────────────────
+  // SCROLL REVEAL for feature cards
+  // ─────────────────────────────────────────────
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible')
+        }, 80 * Array.from(document.querySelectorAll('.feat')).indexOf(entry.target))
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { threshold: 0.15 })
+
+  document.querySelectorAll('.feat').forEach(el => observer.observe(el))
+
+  // ─────────────────────────────────────────────
+  // ENTER KEY on email input
+  // ─────────────────────────────────────────────
+  document.getElementById('emailInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSubmit()
+  })
+</script>
+
+</body>
+</html>
